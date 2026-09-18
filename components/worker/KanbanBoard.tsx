@@ -7,6 +7,8 @@ import {
   ShoppingBag,
 } from "lucide-react";
 
+import { getColumnStatuses } from "@/lib/orderWorkflow";
+
 import type {
   Order,
   OrderStatus,
@@ -68,21 +70,15 @@ export default function KanbanBoard({
 
         const columnOrders = orders.filter(
           (order) => {
-            /*
-             * Los pedidos "ready" y "called"
-             * permanecen visualmente dentro de
-             * "Listos para entregar".
-             */
-
-            if (column.status === "ready") {
-              return (
-                order.status === "ready" ||
-                order.status === "called"
+            const statuses =
+              getColumnStatuses(
+                column.status
               );
-            }
 
             return (
-              order.status === column.status
+              statuses.includes(
+                order.status
+              )
             );
           }
         );

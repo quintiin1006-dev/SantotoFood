@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -17,10 +18,12 @@ import BottomNav, {
 
 import { initialOrders } from "@/data/orders";
 
-import type {
-  Order,
-  OrderStatus,
-} from "@/types/order";
+import {
+  advanceOrder,
+  canAdvanceOrder,
+} from "@/lib/orderWorkflow";
+
+import type { Order } from "@/types/order";
 
 export default function WorkerPage() {
   const [orders, setOrders] =
@@ -34,6 +37,22 @@ export default function WorkerPage() {
 
   const [activeModule, setActiveModule] =
     useState<WorkerModule>("orders");
+
+  /*
+   * Re-render periódico para que los tiempos
+   * relativos ("Hace 5 min") se mantengan vivos.
+   */
+
+  const [, setNow] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setNow(Date.now()),
+      30_000
+    );
+
+    return () => clearInterval(id);
+  }, []);
 
   /*
    * ======================================================
@@ -83,126 +102,33 @@ export default function WorkerPage() {
    * ======================================================
    * CAMBIO DE ESTADO
    * ======================================================
+   *
+   * El flujo completo (pending → preparing →
+   * ready → called → delivered) y los timestamps
+   * asociados viven en lib/orderWorkflow.
    */
 
-  const updateOrderStatus = (
-    order: Order,
-    status: OrderStatus
+  const handleOrderAction = (
+    order: Order
   ) => {
+    if (!canAdvanceOrder(order)) {
+      return;
+    }
+
     setOrders(
       (currentOrders) =>
         currentOrders.map(
           (currentOrder) =>
             currentOrder.id ===
             order.id
-              ? {
-                  ...currentOrder,
-                  status,
-                }
+              ? advanceOrder(
+                  currentOrder
+                )
               : currentOrder
         )
     );
 
     setSelectedOrder(null);
-  };
-
-  /*
-   * ======================================================
-   * ACCIONES DEL PEDIDO
-   * ======================================================
-   *
-   * Flujo:
-   *
-   * pending
-   *    ↓
-   * preparing
-   *    ↓
-   * ready
-   *    ↓
-   * called
-   *    ↓
-   * delivered
-   */
-
-  const handleOrderAction = (
-    order: Order
-  ) => {
-    switch (order.status) {
-      /*
-       * PEDIDO RECIBIDO
-       */
-
-      case "pending":
-        updateOrderStatus(
-          order,
-          "preparing"
-        );
-
-        break;
-
-      /*
-       * PEDIDO EN PREPARACIÓN
-       */
-
-      case "preparing":
-        updateOrderStatus(
-          order,
-          "ready"
-        );
-
-        break;
-
-      /*
-       * PEDIDO LISTO
-       *
-       * El trabajador llama al estudiante.
-       */
-
-      case "ready":
-        setOrders(
-          (currentOrders) =>
-            currentOrders.map(
-              (currentOrder) =>
-                currentOrder.id ===
-                order.id
-                  ? {
-                      ...currentOrder,
-
-                      status: "called",
-
-                      calledAt:
-                        new Date().toISOString(),
-                    }
-                  : currentOrder
-            )
-        );
-
-        setSelectedOrder(null);
-
-        break;
-
-      /*
-       * ESTUDIANTE AVISADO
-       *
-       * El trabajador confirma que
-       * entregó físicamente el pedido.
-       */
-
-      case "called":
-        updateOrderStatus(
-          order,
-          "delivered"
-        );
-
-        break;
-
-      /*
-       * PEDIDO FINALIZADO
-       */
-
-      case "delivered":
-        break;
-    }
   };
 
   /*

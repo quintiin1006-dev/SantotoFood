@@ -2,11 +2,18 @@
 
 import {
   ArrowRight,
-  CheckCircle2,
-  ChefHat,
-  Megaphone,
   UserRound,
 } from "lucide-react";
+
+import {
+  ACTION_ICONS,
+  ACTION_LABELS,
+} from "@/lib/orderWorkflow";
+
+import {
+  formatClockTime,
+  formatRelativeTime,
+} from "@/lib/orderTime";
 
 import type { Order } from "@/types/order";
 
@@ -18,41 +25,16 @@ interface OrderCardProps {
   onAction: (order: Order) => void;
 }
 
-const actionConfig = {
-  pending: {
-    label: "Pasar a preparación",
-    icon: ChefHat,
-  },
-
-  preparing: {
-    label: "Marcar como listo",
-    icon: CheckCircle2,
-  },
-
-  ready: {
-    label: "Llamar a recoger",
-    icon: Megaphone,
-  },
-
-  called: {
-    label: "Marcar como entregado",
-    icon: CheckCircle2,
-  },
-
-  delivered: {
-    label: "Entregado",
-    icon: CheckCircle2,
-  },
-} as const;
-
 export default function OrderCard({
   order,
   onOpen,
   onAction,
 }: OrderCardProps) {
-  const action = actionConfig[order.status];
+  const ActionIcon =
+    ACTION_ICONS[order.status];
 
-  const ActionIcon = action.icon;
+  const actionLabel =
+    ACTION_LABELS[order.status];
 
   return (
     <article
@@ -84,7 +66,7 @@ export default function OrderCard({
         </div>
 
         <div className={styles.time}>
-          {order.time}
+          {formatRelativeTime(order.createdAt)}
         </div>
 
         <ArrowRight
@@ -121,13 +103,13 @@ export default function OrderCard({
         />
 
         <span>
-          {action.label}
+          {actionLabel}
         </span>
 
         {order.status === "delivered" &&
           order.deliveredAt && (
             <span className={styles.deliveredTime}>
-              · {order.deliveredAt}
+              · {formatClockTime(order.deliveredAt)}
             </span>
           )}
       </button>

@@ -14,7 +14,7 @@ export interface Order {
   id: string;
   student: string;
   studentId: string;
-  time: string;
+  createdAt: string;
 
   items: OrderItem[];
 
