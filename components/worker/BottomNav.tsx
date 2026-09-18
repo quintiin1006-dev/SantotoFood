@@ -1,9 +1,8 @@
 "use client";
 
 import {
-  BarChart3,
-  Box,
   FileText,
+  History,
   Megaphone,
   Settings,
   UserRound,
@@ -14,8 +13,7 @@ import styles from "./BottomNav.module.css";
 export type WorkerModule =
   | "orders"
   | "calls"
-  | "inventory"
-  | "reports"
+  | "history"
   | "settings"
   | "profile";
 
@@ -36,14 +34,9 @@ const modules = [
     icon: Megaphone,
   },
   {
-    id: "inventory" as const,
-    label: "Inventario",
-    icon: Box,
-  },
-  {
-    id: "reports" as const,
-    label: "Reportes",
-    icon: BarChart3,
+    id: "history" as const,
+    label: "Historial",
+    icon: History,
   },
   {
     id: "settings" as const,
@@ -62,11 +55,15 @@ export default function BottomNav({
   onChange,
 }: BottomNavProps) {
   return (
-    <nav className={styles.nav} aria-label="Navegación principal">
+    <nav
+      className={styles.nav}
+      aria-label="Navegación principal"
+    >
       {modules.map((module) => {
         const Icon = module.icon;
 
-        const active = activeModule === module.id;
+        const active =
+          activeModule === module.id;
 
         return (
           <button
@@ -74,18 +71,27 @@ export default function BottomNav({
             className={`${styles.item} ${
               active ? styles.active : ""
             }`}
-            onClick={() => onChange(module.id)}
-            aria-current={active ? "page" : undefined}
+            onClick={() =>
+              onChange(module.id)
+            }
+            aria-current={
+              active ? "page" : undefined
+            }
           >
             <Icon
               size={23}
-              strokeWidth={active ? 2.5 : 2}
+              strokeWidth={
+                active ? 2.5 : 2
+              }
             />
 
-            <span>{module.label}</span>
+            <span>
+              {module.label}
+            </span>
           </button>
         );
       })}
     </nav>
   );
 }
+
