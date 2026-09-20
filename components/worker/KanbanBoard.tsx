@@ -1,60 +1,54 @@
 "use client";
 
 import {
-  Check,
-  ChefHat,
   Clock3,
+  ChefHat,
   ShoppingBag,
+  Check,
+  type LucideIcon,
 } from "lucide-react";
 
-import { getColumnStatuses } from "@/lib/orderWorkflow";
-
-import type {
-  Order,
-  OrderStatus,
-} from "@/types/order";
-
+import type { Order } from "@/types/order";
 import OrderCard from "./OrderCard";
-
 import styles from "./KanbanBoard.module.css";
 
 interface KanbanBoardProps {
   orders: Order[];
-
   onOpenOrder: (order: Order) => void;
-
   onAction: (order: Order) => void;
 }
 
 interface Column {
-  status: OrderStatus;
+  id: string;
   title: string;
-  icon: typeof Clock3;
+  statuses: Order["status"][];
+  icon: LucideIcon;
 }
 
 const columns: Column[] = [
   {
-    status: "pending",
+    id: "pending",
     title: "Pendientes",
+    statuses: ["pending"],
     icon: Clock3,
   },
-
   {
-    status: "preparing",
+    id: "preparing",
     title: "En preparación",
+    statuses: ["preparing"],
     icon: ChefHat,
   },
-
   {
-    status: "ready",
+    id: "ready",
     title: "Listos para entregar",
+    statuses: ["ready", "called"],
     icon: ShoppingBag,
   },
-
   {
-    status: "delivered",
+    id: "delivered",
     title: "Entregados",
-    icon: Check,
+    statuses: ["delivered"],
+    icon: Clock3,
   },
 ];
 
@@ -66,76 +60,76 @@ export default function KanbanBoard({
   return (
     <section className={styles.board}>
       {columns.map((column) => {
-        const Icon = column.icon;
-
-        const columnOrders = orders.filter(
-          (order) => {
-            const statuses =
-              getColumnStatuses(
-                column.status
-              );
-
-            return (
-              statuses.includes(
-                order.status
-              )
-            );
-          }
+        const columnOrders = orders.filter((order) =>
+          column.statuses.includes(order.status)
         );
 
-        return (
-          <section
-            key={column.status}
-            className={`${styles.column} ${
-              styles[
-                `column-${column.status}`
-              ]
-            }`}
-          >
-            <header
-              className={styles.columnHeader}
-            >
-              <div
-                className={styles.columnTitle}
-              >
-                <div
-                  className={styles.columnIcon}
-                >
-                  <Icon
-                    size={25}
-                    strokeWidth={2.1}
-                  />
-                </div>
+        const visibleOrders =
+          column.id === "delivered"
+            ? [...columnOrders]
+                .sort(
+                  (a, b) =>
+                    new Date(b.updatedAt).getTime() -
+                    new Date(a.updatedAt).getTime()
+                )
+                .slice(0, 5)
+            : columnOrders;
 
-                <h2>
+        return (
+          <article
+            key={column.id}
+            className={styles.column}
+          >
+            <header className={styles.columnHeader}>
+              <div className={styles.columnHeading}>
+                {column.id === "delivered" ? (
+                  <span className={styles.deliveredIcon}>
+                    <Check
+                      size={25}
+                      strokeWidth={3}
+                    />
+                  </span>
+                ) : (
+                  (() => {
+                    const ColumnIcon = column.icon;
+
+                    return (
+                      <ColumnIcon
+                        size={38}
+                        strokeWidth={2.1}
+                        className={styles.columnIcon}
+                      />
+                    );
+                  })()
+                )}
+
+                <span className={styles.columnTitle}>
                   {column.title}
-                </h2>
+                </span>
               </div>
 
-              <span className={styles.count}>
-                {columnOrders.length}
+              <span className={styles.columnCount}>
+                {visibleOrders.length}
               </span>
             </header>
 
-            <div className={styles.orders}>
-              {columnOrders.length > 0 ? (
-                columnOrders.map(
-                  (order) => (
-                    <OrderCard
-                      key={order.id}
-                      order={order}
-                      onOpen={onOpenOrder}
-                      onAction={onAction}
-                    />
-                  )
-                )
-              ) : (
-                <div className={styles.empty}>
+            <div className={styles.columnContent}>
+              {visibleOrders.length === 0 ? (
+                <div className={styles.emptyColumn}>
                   No hay pedidos
                 </div>
+              ) : (
+                visibleOrders.map((order) => (
+                  <OrderCard
+                    key={order.id}
+                    order={order}
+                    onOpen={() => onOpenOrder(order)}
+                    onAction={() => onAction(order)}
+                  />
+                ))
               )}
             </div>
-          </section>
+          </article>
         );
       })}
     </section>

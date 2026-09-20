@@ -1,24 +1,17 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-} from "react";
+import { useEffect, useRef } from "react";
 
 import {
   AlertTriangle,
   Clock3,
   X,
+  ShoppingBag,
 } from "lucide-react";
 
-import {
-  ACTION_ICONS,
-  ACTION_LABELS,
-} from "@/lib/orderWorkflow";
+import type { Order, OrderStatus } from "@/types/order";
 
 import { formatRelativeTime } from "@/lib/orderTime";
-
-import type { Order } from "@/types/order";
 
 import styles from "./OrderDetail.module.css";
 
@@ -37,17 +30,21 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(", ");
 
+const ACTION_LABELS: Record<OrderStatus, string> = {
+  pending: "Pasar a preparación",
+  preparing: "Marcar como listo",
+  ready: "Llamar a recoger",
+  called: "Marcar como entregado",
+  delivered: "Pedido entregado",
+};
+
 export default function OrderDetail({
   order,
   onClose,
   onAction,
 }: OrderDetailProps) {
-  const modalRef =
-    useRef<HTMLDivElement>(null);
-
-  const closeRef =
-    useRef<HTMLButtonElement>(null);
-
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const onCloseRef = useRef(onClose);
 
   useEffect(() => {
@@ -64,15 +61,11 @@ export default function OrderDetail({
 
     closeRef.current?.focus();
 
-    document.body.style.overflow =
-      "hidden";
+    document.body.style.overflow = "hidden";
 
-    const handleKeyDown = (
-      event: KeyboardEvent
-    ) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onCloseRef.current();
-
         return;
       }
 
@@ -80,8 +73,7 @@ export default function OrderDetail({
         return;
       }
 
-      const modal =
-        modalRef.current;
+      const modal = modalRef.current;
 
       if (!modal) {
         return;
@@ -98,34 +90,19 @@ export default function OrderDetail({
       }
 
       const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
 
-      const last =
-        focusable[focusable.length - 1];
-
-      const active =
-        document.activeElement;
-
-      if (
-        event.shiftKey &&
-        active === first
-      ) {
+      if (event.shiftKey && active === first) {
         event.preventDefault();
-
         last.focus();
-      } else if (
-        !event.shiftKey &&
-        active === last
-      ) {
+      } else if (!event.shiftKey && active === last) {
         event.preventDefault();
-
         first.focus();
       }
     };
 
-    document.addEventListener(
-      "keydown",
-      handleKeyDown
-    );
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.removeEventListener(
@@ -143,8 +120,15 @@ export default function OrderDetail({
     return null;
   }
 
-  const ActionIcon =
-    ACTION_ICONS[order.status];
+  const total =
+    order.total ??
+    order.items.reduce(
+      (sum, item) =>
+        sum +
+        (item.subtotal ??
+          (item.unitPrice ?? 0) * item.quantity),
+      0
+    );
 
   return (
     <div
@@ -191,36 +175,80 @@ export default function OrderDetail({
 
         {/* Detalles del pedido */}
         <section className={styles.section}>
-          <h3>Detalles del pedido</h3>
+          <div className={styles.sectionTitle}>
+            <ShoppingBag size={17} />
+
+            <h3>Detalles del pedido</h3>
+          </div>
 
           <div className={styles.items}>
-            {order.items.map((item) => (
+            {order.items.map((item, index) => (
               <div
-                key={item.name}
+                key={item.id ?? `${item.name}-${index}`}
                 className={styles.item}
               >
-                <span>
-                  {item.quantity} × {item.name}
-                </span>
+                {/* Nombre y subtotal */}
+                <div className={styles.itemMain}>
+                  <div className={styles.itemName}>
+                    <strong>
+                      {item.quantity} × {item.name}
+                    </strong>
+                  </div>
+
+                  <span className={styles.itemSubtotal}>
+                    $
+                    {(
+                      item.subtotal ??
+                      (item.unitPrice ?? 0) *
+                        item.quantity
+                    ).toLocaleString("es-CO")}
+                  </span>
+                </div>
+
+                {/* Precio unitario */}
+                {item.unitPrice !== undefined && (
+                  <span className={styles.itemPrice}>
+                    ${item.unitPrice.toLocaleString("es-CO")} c/u
+                  </span>
+                )}
+
+                {/* Bebida */}
+                {item.beverageChoice && (
+                  <span className={styles.itemExtra}>
+                    Bebida: {item.beverageChoice}
+                  </span>
+                )}
+
+                {/* Nota específica del almuerzo */}
+                {item.note && (
+                  <span className={styles.itemExtra}>
+                    Nota: {item.note}
+                  </span>
+                )}
               </div>
             ))}
           </div>
+
+          {/* Total */}
+          <div className={styles.total}>
+            <span>Total</span>
+
+            <strong>
+              ${total.toLocaleString("es-CO")}
+            </strong>
+          </div>
         </section>
 
-        {/* Observaciones */}
+        {/* Observaciones generales */}
         {order.note && (
           <>
             <div className={styles.divider} />
 
             <section className={styles.section}>
-              <div
-                className={styles.sectionTitle}
-              >
+              <div className={styles.sectionTitle}>
                 <AlertTriangle size={17} />
 
-                <h3>
-                  Observaciones
-                </h3>
+                <h3>Observaciones</h3>
               </div>
 
               <p className={styles.note}>
@@ -237,9 +265,7 @@ export default function OrderDetail({
           <Clock3 size={18} />
 
           <div>
-            <span>
-              Tiempo de pedido
-            </span>
+            <span>Tiempo de pedido</span>
 
             <strong>
               {formatRelativeTime(order.createdAt)}
@@ -251,12 +277,8 @@ export default function OrderDetail({
         <button
           className={styles.action}
           onClick={() => onAction(order)}
-          disabled={
-            order.status === "delivered"
-          }
+          disabled={order.status === "delivered"}
         >
-          <ActionIcon size={18} />
-
           <span>
             {ACTION_LABELS[order.status]}
           </span>

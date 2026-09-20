@@ -1,8 +1,6 @@
 .overlay {
   position: fixed;
-
   inset: 0;
-
   z-index: 100;
 
   display: flex;
@@ -42,6 +40,10 @@
     both;
 }
 
+/* =====================================================
+   CERRAR
+   ===================================================== */
+
 .close {
   position: absolute;
 
@@ -74,6 +76,10 @@
 
   background: #e3edfc;
 }
+
+/* =====================================================
+   ESTUDIANTE
+   ===================================================== */
 
 .header {
   display: flex;
@@ -123,6 +129,10 @@
   font-weight: 600;
 }
 
+/* =====================================================
+   DIVISOR
+   ===================================================== */
+
 .divider {
   height: 1px;
 
@@ -131,14 +141,37 @@
   background: #e3ebf6;
 }
 
+/* =====================================================
+   SECCIONES
+   ===================================================== */
+
 .section h3 {
-  margin: 0 0 13px;
+  margin: 0;
 
   color: #15376f;
 
   font-size: 14px;
   font-weight: 750;
 }
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 13px;
+
+  color: #1761bd;
+}
+
+.sectionTitle h3 {
+  margin: 0;
+}
+
+/* =====================================================
+   ITEMS
+   ===================================================== */
 
 .items {
   display: flex;
@@ -148,32 +181,120 @@
 }
 
 .item {
-  padding: 11px 13px;
+  padding: 12px 13px;
 
-  border-radius: 11px;
+  border-radius: 12px;
 
   background: #f1f6fd;
 
   color: #42659d;
 
   font-size: 13px;
+
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.item:hover {
+  background: #edf4fd;
+
+  transform: translateY(-1px);
+}
+
+/* Nombre + subtotal */
+
+.itemMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.itemName {
+  min-width: 0;
+}
+
+.itemName strong {
+  color: #284e8a;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.itemSubtotal {
+  flex-shrink: 0;
+
+  color: #1761bd;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+/* Precio unitario */
+
+.itemPrice {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #7890b5;
+
+  font-size: 11px;
   font-weight: 550;
 }
 
-.sectionTitle {
+/* Bebida / nota */
+
+.itemExtra {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #5273a8;
+
+  font-size: 11.5px;
+
+  line-height: 1.4;
+}
+
+/* =====================================================
+   TOTAL
+   ===================================================== */
+
+.total {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
-  gap: 8px;
+  margin-top: 14px;
+  padding: 14px 13px;
 
-  margin-bottom: 9px;
+  border-radius: 12px;
 
-  color: #1761bd;
+  background: #e8f2ff;
+
+  color: #21477f;
 }
 
-.sectionTitle h3 {
-  margin: 0;
+.total span {
+  font-size: 13px;
+  font-weight: 650;
 }
+
+.total strong {
+  color: #0757b7;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* =====================================================
+   OBSERVACIONES
+   ===================================================== */
 
 .note {
   margin: 0;
@@ -181,8 +302,13 @@
   color: #5273a8;
 
   font-size: 13px;
+
   line-height: 1.5;
 }
+
+/* =====================================================
+   TIEMPO
+   ===================================================== */
 
 .timeInfo {
   display: flex;
@@ -212,6 +338,10 @@
   font-size: 13px;
 }
 
+/* =====================================================
+   ACCIÓN
+   ===================================================== */
+
 .action {
   width: 100%;
 
@@ -240,7 +370,8 @@
   font-size: 13px;
   font-weight: 700;
 
-  box-shadow: 0 7px 17px rgba(11, 91, 206, 0.2);
+  box-shadow:
+    0 7px 17px rgba(11, 91, 206, 0.2);
 
   cursor: pointer;
 
@@ -252,7 +383,8 @@
 .action:hover:not(:disabled) {
   transform: translateY(-1px);
 
-  box-shadow: 0 10px 22px rgba(11, 91, 206, 0.26);
+  box-shadow:
+    0 10px 22px rgba(11, 91, 206, 0.26);
 }
 
 .action:active:not(:disabled) {
@@ -269,6 +401,10 @@
   box-shadow: none;
 }
 
+/* =====================================================
+   ANIMACIONES
+   ===================================================== */
+
 @keyframes overlayIn {
   from {
     opacity: 0;
@@ -282,14 +418,24 @@
 @keyframes modalIn {
   from {
     opacity: 0;
-    transform: translateY(15px) scale(0.96);
+
+    transform:
+      translateY(15px)
+      scale(0.96);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+
+    transform:
+      translateY(0)
+      scale(1);
   }
 }
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
 
 @media (max-width: 560px) {
   .overlay {
@@ -307,7 +453,19 @@
 
     border-radius: 25px 25px 0 0;
   }
+
+  .itemMain {
+    align-items: flex-start;
+  }
+
+  .itemSubtotal {
+    font-size: 12px;
+  }
 }
+
+/* =====================================================
+   ACCESIBILIDAD
+   ===================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .overlay,
