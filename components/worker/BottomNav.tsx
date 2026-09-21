@@ -4,7 +4,7 @@ import {
   FileText,
   History,
   Megaphone,
-  Settings,
+  Package,
   UserRound,
 } from "lucide-react";
 
@@ -14,7 +14,7 @@ export type WorkerModule =
   | "orders"
   | "calls"
   | "history"
-  | "settings"
+  | "inventory"
   | "profile";
 
 interface BottomNavProps {
@@ -39,9 +39,9 @@ const modules = [
     icon: History,
   },
   {
-    id: "settings" as const,
-    label: "Configuración",
-    icon: Settings,
+    id: "inventory" as const,
+    label: "Inventario",
+    icon: Package,
   },
   {
     id: "profile" as const,
@@ -94,4 +94,3 @@ export default function BottomNav({
     </nav>
   );
 }
-
