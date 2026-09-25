@@ -3,6 +3,7 @@
 import {
   ArrowRight,
   UserRound,
+  XCircle,
 } from "lucide-react";
 
 import {
@@ -23,12 +24,14 @@ interface OrderCardProps {
   order: Order;
   onOpen: (order: Order) => void;
   onAction: (order: Order) => void;
+  onCancel: (order: Order) => void;
 }
 
 export default function OrderCard({
   order,
   onOpen,
   onAction,
+  onCancel,
 }: OrderCardProps) {
   const ActionIcon =
     ACTION_ICONS[order.status];
@@ -36,10 +39,16 @@ export default function OrderCard({
   const actionLabel =
     ACTION_LABELS[order.status];
 
+  const isPending =
+    order.status === "pending";
+
+  const isDelivered =
+    order.status === "delivered";
+
   return (
     <article
       className={`${styles.card} ${
-        order.status === "delivered"
+        isDelivered
           ? styles.delivered
           : ""
       }`}
@@ -100,24 +109,20 @@ export default function OrderCard({
         </div>
       )}
 
-      {/* Acción */}
+      {/* Acción principal */}
       <button
         type="button"
         className={`${styles.actionButton} ${
-          order.status === "delivered"
+          isDelivered
             ? styles.actionDisabled
             : ""
         }`}
         onClick={() =>
           onAction(order)
         }
-        disabled={
-          order.status ===
-          "delivered"
-        }
+        disabled={isDelivered}
         aria-label={
-          order.status ===
-          "delivered"
+          isDelivered
             ? "Pedido entregado"
             : actionLabel
         }
@@ -131,8 +136,7 @@ export default function OrderCard({
           {actionLabel}
         </span>
 
-        {order.status ===
-          "delivered" &&
+        {isDelivered &&
           order.deliveredAt && (
             <span
               className={
@@ -146,6 +150,42 @@ export default function OrderCard({
             </span>
           )}
       </button>
+
+      {/* Cancelar pedido */}
+      {isPending && (
+        <button
+          type="button"
+          onClick={() =>
+            onCancel(order)
+          }
+          aria-label={`Cancelar pedido de ${order.student}`}
+          style={{
+            width: "100%",
+            marginTop: "8px",
+            border: "1px solid #fecaca",
+            borderRadius: "12px",
+            padding: "9px 12px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "7px",
+            background: "#fff7f7",
+            color: "#dc2626",
+            fontSize: "13px",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
+          <XCircle
+            size={16}
+            strokeWidth={2.2}
+          />
+
+          <span>
+            Cancelar pedido
+          </span>
+        </button>
+      )}
     </article>
   );
 }

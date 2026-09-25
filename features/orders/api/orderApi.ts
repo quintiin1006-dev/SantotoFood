@@ -9,14 +9,19 @@ function getActionEndpoint(
   switch (order.status) {
     case "pending":
       return `/api/orders/${order.id}/prepare`;
+
     case "preparing":
       return `/api/orders/${order.id}/ready`;
+
     case "ready":
       return `/api/orders/${order.id}/call`;
+
     case "called":
       return `/api/orders/${order.id}/deliver`;
+
     case "delivered":
       return null;
+
     default:
       return null;
   }
@@ -27,6 +32,7 @@ async function readErrorMessage(
   fallback: string
 ): Promise<string> {
   const message = await response.text();
+
   return message.trim() || fallback;
 }
 
@@ -45,14 +51,17 @@ export async function getOrders(): Promise<Order[]> {
     );
   }
 
-  const data: BackendOrder[] = await response.json();
+  const data: BackendOrder[] =
+    await response.json();
+
   return data.map(mapBackendOrder);
 }
 
 export async function advanceOrder(
   order: Order
 ): Promise<Order> {
-  const endpoint = getActionEndpoint(order);
+  const endpoint =
+    getActionEndpoint(order);
 
   if (!endpoint) {
     return order;
@@ -66,22 +75,69 @@ export async function advanceOrder(
   );
 
   if (!response.ok) {
-    const message = await readErrorMessage(
-      response,
-      "No se pudo actualizar el pedido."
-    );
+    const message =
+      await readErrorMessage(
+        response,
+        "No se pudo actualizar el pedido."
+      );
 
-    const error = new Error(message) as Error & {
-      status?: number;
-    };
+    const error =
+      new Error(message) as Error & {
+        status?: number;
+      };
 
     error.status = response.status;
+
     throw error;
   }
 
-  const updatedBackendOrder: BackendOrder =
-    await response.json();
+  const updatedBackendOrder:
+    BackendOrder =
+      await response.json();
 
-  return mapBackendOrder(updatedBackendOrder);
+  return mapBackendOrder(
+    updatedBackendOrder
+  );
 }
 
+export async function cancelOrder(
+  order: Order
+): Promise<Order> {
+  if (order.status !== "pending") {
+    throw new Error(
+      "Solo un pedido pendiente puede cancelarse."
+    );
+  }
+
+  const response = await fetch(
+    `${API_URL}/api/orders/${order.id}/cancel`,
+    {
+      method: "PATCH",
+    }
+  );
+
+  if (!response.ok) {
+    const message =
+      await readErrorMessage(
+        response,
+        "No se pudo cancelar el pedido."
+      );
+
+    const error =
+      new Error(message) as Error & {
+        status?: number;
+      };
+
+    error.status = response.status;
+
+    throw error;
+  }
+
+  const updatedBackendOrder:
+    BackendOrder =
+      await response.json();
+
+  return mapBackendOrder(
+    updatedBackendOrder
+  );
+}

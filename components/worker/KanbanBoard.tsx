@@ -16,6 +16,7 @@ interface KanbanBoardProps {
   orders: Order[];
   onOpenOrder: (order: Order) => void;
   onAction: (order: Order) => void;
+  onCancel: (order: Order) => void;
 }
 
 interface Column {
@@ -56,16 +57,17 @@ export default function KanbanBoard({
   orders,
   onOpenOrder,
   onAction,
+  onCancel,
 }: KanbanBoardProps) {
   return (
     <section className={styles.board}>
       {columns.map((column) => {
-        const columnOrders =
-          orders.filter((order) =>
+        const columnOrders = orders.filter(
+          (order) =>
             column.statuses.includes(
               order.status
             )
-          );
+        );
 
         const visibleOrders =
           column.id === "delivered"
@@ -82,8 +84,7 @@ export default function KanbanBoard({
                 .slice(0, 5)
             : columnOrders;
 
-        const ColumnIcon =
-          column.icon;
+        const ColumnIcon = column.icon;
 
         return (
           <article
@@ -144,8 +145,7 @@ export default function KanbanBoard({
                 styles.columnContent
               }
             >
-              {visibleOrders.length ===
-              0 ? (
+              {visibleOrders.length === 0 ? (
                 <div
                   className={
                     styles.emptyColumn
@@ -164,6 +164,9 @@ export default function KanbanBoard({
                       }
                       onAction={() =>
                         onAction(order)
+                      }
+                      onCancel={() =>
+                        onCancel(order)
                       }
                     />
                   )

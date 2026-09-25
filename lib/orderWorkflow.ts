@@ -9,22 +9,6 @@ import type {
   OrderStatus,
 } from "@/types/order";
 
-/*
- * ======================================================
- * MÁQUINA DE ESTADOS DEL PEDIDO
- * ======================================================
- *
- * pending
- *    ↓
- * preparing
- *    ↓
- * ready
- *    ↓
- * called
- *    ↓
- * delivered
- */
-
 export const ORDER_FLOW: readonly OrderStatus[] = [
   "pending",
   "preparing",
@@ -32,12 +16,6 @@ export const ORDER_FLOW: readonly OrderStatus[] = [
   "called",
   "delivered",
 ];
-
-/*
- * ======================================================
- * ACCIONES
- * ======================================================
- */
 
 export const ACTION_LABELS: Record<
   OrderStatus,
@@ -57,6 +35,9 @@ export const ACTION_LABELS: Record<
 
   delivered:
     "Pedido entregado",
+
+  cancelled:
+    "Pedido cancelado",
 };
 
 export const ACTION_ICONS: Record<
@@ -77,13 +58,10 @@ export const ACTION_ICONS: Record<
 
   delivered:
     CheckCircle2,
-};
 
-/*
- * ======================================================
- * TRANSICIONES
- * ======================================================
- */
+  cancelled:
+    CheckCircle2,
+};
 
 export function getNextStatus(
   status: OrderStatus
@@ -112,17 +90,6 @@ export function canAdvanceOrder(
   );
 }
 
-/*
- * ======================================================
- * ESTADOS POR COLUMNA
- * ======================================================
- *
- * "ready" y "called" pertenecen
- * visualmente a la misma columna:
- *
- * Listos para entregar
- */
-
 export function getColumnStatuses(
   columnStatus: OrderStatus
 ): readonly OrderStatus[] {
@@ -137,22 +104,6 @@ export function getColumnStatuses(
 
   return [columnStatus];
 }
-
-/*
- * ======================================================
- * AVANZAR PEDIDO
- * ======================================================
- *
- * Devuelve una nueva orden con el
- * siguiente estado.
- *
- * No modifica la orden original.
- *
- * Esta función es útil para lógica
- * local/pruebas. Los cambios reales
- * del pedido se realizan mediante
- * el backend.
- */
 
 export function advanceOrder(
   order: Order

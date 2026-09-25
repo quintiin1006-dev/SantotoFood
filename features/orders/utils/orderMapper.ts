@@ -10,16 +10,22 @@ export function mapOrderStatus(
   switch (status) {
     case "PENDING":
       return "pending";
+
     case "PREPARING":
       return "preparing";
+
     case "READY":
       return "ready";
+
     case "CALLED":
       return "called";
+
     case "DELIVERED":
       return "delivered";
+
     case "CANCELLED":
-      return "pending";
+      return "cancelled";
+
     default:
       return "pending";
   }
@@ -41,10 +47,13 @@ export function mapBackendOrder(
       unitPrice: item.unitPrice,
       beverageChoice:
         item.beverageChoice ?? undefined,
-      note: item.note ?? undefined,
+      note:
+        item.note ?? undefined,
       subtotal: item.subtotal,
     })),
     total: backendOrder.total,
-    status: mapOrderStatus(backendOrder.status),
+    status: mapOrderStatus(
+      backendOrder.status
+    ),
   };
 }
