@@ -13,18 +13,48 @@ export default function HomePage() {
           "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
-      <Link
-        href="/worker"
+      <div
         style={{
-          color: "white",
-          textDecoration: "none",
-          padding: "14px 22px",
-          borderRadius: "14px",
-          background: "rgba(255,255,255,.14)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "16px",
+          textAlign: "center",
         }}
       >
-        Ir al panel de trabajador
-      </Link>
+        <h1
+          style={{
+            margin: 0,
+            fontSize: "32px",
+            fontWeight: 700,
+          }}
+        >
+          UniFood
+        </h1>
+
+        <p
+          style={{
+            margin: 0,
+            opacity: 0.85,
+            fontSize: "16px",
+          }}
+        >
+          Tu comida, sin filas.
+        </p>
+
+        <Link
+          href="/worker"
+          style={{
+            color: "white",
+            textDecoration: "none",
+            padding: "14px 22px",
+            borderRadius: "14px",
+            background: "rgba(255,255,255,.14)",
+          }}
+        >
+          Ir al panel de trabajador
+        </Link>
+      </div>
     </main>
   );
 }

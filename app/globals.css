@@ -44,21 +44,12 @@ button {
 
   width: 100%;
 
-  /*
-   * IMPORTANTE:
-   * La página siempre ocupa exactamente
-   * la altura de la pantalla.
-   */
   height: 100vh;
   min-height: 100vh;
 
   display: flex;
   flex-direction: column;
 
-  /*
-   * Evita que los pedidos hagan crecer
-   * verticalmente toda la página.
-   */
   overflow: hidden;
 
   background:
@@ -73,6 +64,12 @@ button {
       #0756a9 48%,
       #043d7f 100%
     );
+
+  /*
+   * Mantiene controladas las capas
+   * visuales de la página.
+   */
+  isolation: isolate;
 }
 
 
@@ -109,20 +106,10 @@ button {
 .worker-main {
   position: relative;
 
-  z-index: 1;
+  z-index: 2;
 
-  /*
-   * Ocupa todo el espacio disponible
-   * entre Header y BottomNav.
-   */
   flex: 1 1 0;
 
-  /*
-   * IMPORTANTE:
-   * Permite que el contenido interno
-   * pueda reducirse sin aumentar
-   * la altura de la página.
-   */
   min-height: 0;
 
   min-width: 0;
@@ -131,20 +118,22 @@ button {
 
   flex-direction: column;
 
-  /*
-   * El scroll NO ocurre aquí.
-   * Ocurre dentro de cada columna
-   * del Kanban.
-   */
   overflow: hidden;
 
   padding:
     14px 24px 7px;
+
+  /*
+   * Permite controlar correctamente
+   * la marca de agua.
+   */
+  isolation: isolate;
 }
 
 
 /* =========================================================
-   LOGO SANTOTOFOOD — MARCA DE AGUA
+   LOGO UNIFOOD CENTRAL
+   MARCA DE AGUA
    ========================================================= */
 
 .worker-main::before {
@@ -152,17 +141,17 @@ button {
 
   position: absolute;
 
-  width: 620px;
-  height: 620px;
-
   left: 50%;
-  top: 53%;
+  top: 52%;
 
   transform:
     translate(-50%, -50%);
 
+  width: 420px;
+  height: 420px;
+
   background-image:
-    url("/santoto-logo.png");
+    url("/unifood-pantalla.png");
 
   background-repeat:
     no-repeat;
@@ -173,8 +162,10 @@ button {
   background-size:
     contain;
 
-  opacity:
-    0.10;
+  /*
+   * Transparencia de la marca de agua.
+   */
+  opacity: 0.10;
 
   pointer-events:
     none;
@@ -182,13 +173,16 @@ button {
   user-select:
     none;
 
-  z-index:
-    0;
+  /*
+   * El logo queda sobre el fondo,
+   * pero debajo del Kanban.
+   */
+  z-index: 0;
 }
 
 
 /* =========================================================
-   CONTENIDO DEL KANBAN SOBRE EL LOGO
+   CONTENIDO DEL KANBAN
    ========================================================= */
 
 .worker-main > * {
@@ -196,14 +190,31 @@ button {
 
   z-index: 1;
 
-  /*
-   * IMPORTANTE:
-   * Evita que el Kanban fuerce
-   * el crecimiento del contenedor.
-   */
   min-height: 0;
 
   min-width: 0;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.worker-page > header {
+  position: relative;
+
+  z-index: 5;
+}
+
+
+/* =========================================================
+   NAVEGACIÓN INFERIOR
+   ========================================================= */
+
+.worker-page > nav {
+  position: relative;
+
+  z-index: 5;
 }
 
 
@@ -218,13 +229,15 @@ button {
       12px 16px 7px;
   }
 
-
   .worker-main::before {
     width:
-      520px;
+      360px;
 
     height:
-      520px;
+      360px;
+
+    opacity:
+      0.09;
   }
 }
 
@@ -234,12 +247,6 @@ button {
    ========================================================= */
 
 @media (max-width: 760px) {
-
-  /*
-   * En móvil sí permitimos que la página
-   * pueda desplazarse verticalmente,
-   * porque las columnas se apilan.
-   */
 
   body {
     overflow-y:
@@ -279,10 +286,10 @@ button {
 
   .worker-main::before {
     width:
-      380px;
+      280px;
 
     height:
-      380px;
+      280px;
 
     top:
       50%;

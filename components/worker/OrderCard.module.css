@@ -18,7 +18,8 @@
     0 5px 16px rgba(5, 52, 115, 0.12),
     0 1px 2px rgba(5, 52, 115, 0.06);
 
-  animation: cardIn 450ms
+  animation:
+    cardIn 450ms
     cubic-bezier(0.22, 1, 0.36, 1)
     both;
 
@@ -61,6 +62,17 @@
   text-align: left;
 
   cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mainInfo:focus-visible {
+  outline: 3px solid
+    rgba(8, 104, 233, 0.22);
+
+  outline-offset: 3px;
+
+  border-radius: 8px;
 }
 
 .userIcon {
@@ -127,7 +139,7 @@
 
   transition:
     transform 200ms
-      cubic-bezier(0.22, 1, 0.36, 1);
+    cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .mainInfo:hover .arrow {
@@ -157,7 +169,8 @@
   font-size: 11px;
   font-weight: 650;
 
-  animation: calledAppear 250ms
+  animation:
+    calledAppear 250ms
     cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -172,7 +185,8 @@
   background: #12b886;
 
   box-shadow:
-    0 0 0 3px rgba(18, 184, 134, 0.12);
+    0 0 0 3px
+    rgba(18, 184, 134, 0.12);
 }
 
 /* =========================================================
@@ -212,6 +226,8 @@
       cubic-bezier(0.22, 1, 0.36, 1),
     background 180ms ease,
     box-shadow 180ms ease;
+
+  -webkit-tap-highlight-color: transparent;
 }
 
 .actionButton:hover:not(:disabled) {
@@ -224,11 +240,19 @@
   );
 
   box-shadow:
-    0 5px 13px rgba(17, 103, 225, 0.13);
+    0 5px 13px
+    rgba(17, 103, 225, 0.13);
 }
 
 .actionButton:active:not(:disabled) {
   transform: scale(0.98);
+}
+
+.actionButton:focus-visible {
+  outline: 3px solid
+    rgba(8, 104, 233, 0.22);
+
+  outline-offset: 3px;
 }
 
 .actionDisabled {
@@ -237,6 +261,10 @@
   color: #637aa2;
 
   background: #e4ecf7;
+}
+
+.actionDisabled:focus-visible {
+  outline: none;
 }
 
 .deliveredTime {

@@ -45,8 +45,8 @@ export default function Header({
       <div className={styles.brand}>
         <div className={styles.logoWrapper}>
           <Image
-            src="/santoto-logo.jpeg"
-            alt="Universidad Santo Tomás"
+            src="/unifood-logo.png"
+            alt="UniFood"
             width={64}
             height={64}
             className={styles.logo}
@@ -56,10 +56,10 @@ export default function Header({
 
         <div className={styles.brandInfo}>
           <h1>
-            Santoto<span>Food</span>
+            Uni<span>Food</span>
           </h1>
 
-          <p>Cafetería U. Santo Tomás</p>
+          <p>Gestión de pedidos</p>
         </div>
       </div>
 

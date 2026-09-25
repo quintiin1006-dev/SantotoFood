@@ -46,6 +46,7 @@ export default function OrderCard({
     >
       {/* Información principal del estudiante */}
       <button
+        type="button"
         className={styles.mainInfo}
         onClick={() => onOpen(order)}
         aria-label={`Ver pedido de ${order.student}`}
@@ -58,7 +59,9 @@ export default function OrderCard({
         </div>
 
         <div className={styles.student}>
-          <strong>{order.student}</strong>
+          <strong>
+            {order.student}
+          </strong>
 
           <span>
             ID: {order.studentId}
@@ -66,7 +69,9 @@ export default function OrderCard({
         </div>
 
         <div className={styles.time}>
-          {formatRelativeTime(order.createdAt)}
+          {formatRelativeTime(
+            order.createdAt
+          )}
         </div>
 
         <ArrowRight
@@ -78,8 +83,16 @@ export default function OrderCard({
 
       {/* Estado del estudiante */}
       {order.status === "called" && (
-        <div className={styles.calledStatus}>
-          <span className={styles.calledDot} />
+        <div
+          className={
+            styles.calledStatus
+          }
+        >
+          <span
+            className={
+              styles.calledDot
+            }
+          />
 
           <span>
             Estudiante avisado
@@ -89,13 +102,25 @@ export default function OrderCard({
 
       {/* Acción */}
       <button
+        type="button"
         className={`${styles.actionButton} ${
           order.status === "delivered"
             ? styles.actionDisabled
             : ""
         }`}
-        onClick={() => onAction(order)}
-        disabled={order.status === "delivered"}
+        onClick={() =>
+          onAction(order)
+        }
+        disabled={
+          order.status ===
+          "delivered"
+        }
+        aria-label={
+          order.status ===
+          "delivered"
+            ? "Pedido entregado"
+            : actionLabel
+        }
       >
         <ActionIcon
           size={18}
@@ -106,10 +131,18 @@ export default function OrderCard({
           {actionLabel}
         </span>
 
-        {order.status === "delivered" &&
+        {order.status ===
+          "delivered" &&
           order.deliveredAt && (
-            <span className={styles.deliveredTime}>
-              · {formatClockTime(order.deliveredAt)}
+            <span
+              className={
+                styles.deliveredTime
+              }
+            >
+              ·{" "}
+              {formatClockTime(
+                order.deliveredAt
+              )}
             </span>
           )}
       </button>

@@ -247,9 +247,6 @@
   padding-bottom:
     18px;
 
-  /*
-   * Firefox
-   */
   scrollbar-width:
     thin;
 
@@ -268,15 +265,12 @@
     6px;
 }
 
-
 .columnContent::-webkit-scrollbar-track {
   background:
     transparent;
 }
 
-
 .columnContent::-webkit-scrollbar-thumb {
-
   background:
     rgba(255, 255, 255, 0.24);
 
@@ -288,9 +282,7 @@
     0.2s ease;
 }
 
-
 .columnContent::-webkit-scrollbar-thumb:hover {
-
   background:
     rgba(255, 255, 255, 0.42);
 }
@@ -301,7 +293,6 @@
    ===================================================== */
 
 .emptyColumn {
-
   min-height:
     100px;
 
@@ -333,27 +324,20 @@
    ===================================================== */
 
 @media (max-width: 1100px) {
-
   .board {
-
     gap:
       12px;
   }
 
-
   .columnContent {
-
     padding:
       10px;
   }
-
 }
 
 
 @media (max-width: 850px) {
-
   .board {
-
     grid-template-columns:
       repeat(
         2,
@@ -369,14 +353,11 @@
     gap:
       12px;
   }
-
 }
 
 
 @media (max-width: 600px) {
-
   .board {
-
     grid-template-columns:
       1fr;
 
@@ -388,11 +369,15 @@
 
     overflow-x:
       hidden;
+
+    gap:
+      12px;
+
+    padding-right:
+      2px;
   }
 
-
   .column {
-
     min-height:
       320px;
 
@@ -403,9 +388,7 @@
       0;
   }
 
-
   .columnHeader {
-
     height:
       70px;
 
@@ -413,10 +396,8 @@
       0 14px;
   }
 
-
   .columnIcon,
   .deliveredIcon {
-
     width:
       34px;
 
@@ -424,16 +405,12 @@
       34px;
   }
 
-
   .columnTitle {
-
     font-size:
       15px;
   }
 
-
   .columnCount {
-
     min-width:
       34px;
 
@@ -443,5 +420,16 @@
     font-size:
       14px;
   }
+}
 
+
+/* =====================================================
+   REDUCCIÓN DE MOVIMIENTO
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .columnContent::-webkit-scrollbar-thumb {
+    transition:
+      none;
+  }
 }

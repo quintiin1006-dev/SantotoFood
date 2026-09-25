@@ -14,7 +14,8 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 
-  animation: overlayIn 220ms ease both;
+  animation:
+    overlayIn 220ms ease both;
 }
 
 .modal {
@@ -33,11 +34,43 @@
   background: rgba(255, 255, 255, 0.98);
 
   box-shadow:
-    0 30px 80px rgba(3, 31, 70, 0.3),
-    0 5px 20px rgba(3, 31, 70, 0.12);
+    0 30px 80px
+    rgba(3, 31, 70, 0.3),
+    0 5px 20px
+    rgba(3, 31, 70, 0.12);
 
-  animation: modalIn 360ms cubic-bezier(0.22, 1, 0.36, 1)
+  animation:
+    modalIn 360ms
+    cubic-bezier(0.22, 1, 0.36, 1)
     both;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    #cbd9ec
+    transparent;
+}
+
+/* =====================================================
+   SCROLLBAR DEL MODAL
+   ===================================================== */
+
+.modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: #cbd9ec;
+
+  border-radius: 999px;
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+  background: #b4c7e0;
 }
 
 /* =====================================================
@@ -69,12 +102,23 @@
   transition:
     transform 180ms ease,
     background-color 180ms ease;
+
+  -webkit-tap-highlight-color: transparent;
 }
 
 .close:hover {
-  transform: rotate(4deg) scale(1.05);
+  transform:
+    rotate(4deg)
+    scale(1.05);
 
   background: #e3edfc;
+}
+
+.close:focus-visible {
+  outline: 3px solid
+    rgba(8, 104, 233, 0.22);
+
+  outline-offset: 3px;
 }
 
 /* =====================================================
@@ -199,7 +243,8 @@
 .item:hover {
   background: #edf4fd;
 
-  transform: translateY(-1px);
+  transform:
+    translateY(-1px);
 }
 
 /* Nombre + subtotal */
@@ -371,24 +416,37 @@
   font-weight: 700;
 
   box-shadow:
-    0 7px 17px rgba(11, 91, 206, 0.2);
+    0 7px 17px
+    rgba(11, 91, 206, 0.2);
 
   cursor: pointer;
 
   transition:
     transform 180ms ease,
     box-shadow 180ms ease;
+
+  -webkit-tap-highlight-color: transparent;
 }
 
 .action:hover:not(:disabled) {
-  transform: translateY(-1px);
+  transform:
+    translateY(-1px);
 
   box-shadow:
-    0 10px 22px rgba(11, 91, 206, 0.26);
+    0 10px 22px
+    rgba(11, 91, 206, 0.26);
 }
 
 .action:active:not(:disabled) {
-  transform: scale(0.98);
+  transform:
+    scale(0.98);
+}
+
+.action:focus-visible {
+  outline: 3px solid
+    rgba(8, 104, 233, 0.25);
+
+  outline-offset: 3px;
 }
 
 .action:disabled {
@@ -399,6 +457,10 @@
   background: #e5ecf6;
 
   box-shadow: none;
+}
+
+.action:disabled:focus-visible {
+  outline: none;
 }
 
 /* =====================================================
@@ -451,15 +513,18 @@
 
     padding: 23px;
 
-    border-radius: 25px 25px 0 0;
+    border-radius:
+      25px 25px 0 0;
   }
 
   .itemMain {
-    align-items: flex-start;
+    align-items:
+      flex-start;
   }
 
   .itemSubtotal {
-    font-size: 12px;
+    font-size:
+      12px;
   }
 }
 
@@ -469,7 +534,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .overlay,
-  .modal {
+  .modal,
+  .item,
+  .close,
+  .action {
     animation: none;
+    transition: none;
   }
 }

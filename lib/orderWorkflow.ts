@@ -33,26 +33,50 @@ export const ORDER_FLOW: readonly OrderStatus[] = [
   "delivered",
 ];
 
+/*
+ * ======================================================
+ * ACCIONES
+ * ======================================================
+ */
+
 export const ACTION_LABELS: Record<
   OrderStatus,
   string
 > = {
-  pending: "Pasar a preparación",
-  preparing: "Marcar como listo",
-  ready: "Llamar a recoger",
-  called: "Marcar como entregado",
-  delivered: "Entregado",
+  pending:
+    "Pasar a preparación",
+
+  preparing:
+    "Marcar como listo",
+
+  ready:
+    "Llamar a recoger",
+
+  called:
+    "Marcar como entregado",
+
+  delivered:
+    "Pedido entregado",
 };
 
 export const ACTION_ICONS: Record<
   OrderStatus,
   typeof ChefHat
 > = {
-  pending: ChefHat,
-  preparing: CheckCircle2,
-  ready: Megaphone,
-  called: CheckCircle2,
-  delivered: CheckCircle2,
+  pending:
+    ChefHat,
+
+  preparing:
+    CheckCircle2,
+
+  ready:
+    Megaphone,
+
+  called:
+    CheckCircle2,
+
+  delivered:
+    CheckCircle2,
 };
 
 /*
@@ -64,11 +88,13 @@ export const ACTION_ICONS: Record<
 export function getNextStatus(
   status: OrderStatus
 ): OrderStatus | null {
-  const index = ORDER_FLOW.indexOf(status);
+  const index =
+    ORDER_FLOW.indexOf(status);
 
   if (
     index < 0 ||
-    index >= ORDER_FLOW.length - 1
+    index >=
+      ORDER_FLOW.length - 1
   ) {
     return null;
   }
@@ -80,54 +106,84 @@ export function canAdvanceOrder(
   order: Order
 ): boolean {
   return (
-    getNextStatus(order.status) !== null
+    getNextStatus(
+      order.status
+    ) !== null
   );
 }
 
-/**
- * Estados que se agrupan visualmente en una
- * misma columna del kanban. La columna "ready"
- * también contiene los pedidos "called".
+/*
+ * ======================================================
+ * ESTADOS POR COLUMNA
+ * ======================================================
+ *
+ * "ready" y "called" pertenecen
+ * visualmente a la misma columna:
+ *
+ * Listos para entregar
  */
+
 export function getColumnStatuses(
   columnStatus: OrderStatus
 ): readonly OrderStatus[] {
-  if (columnStatus === "ready") {
-    return ["ready", "called"];
+  if (
+    columnStatus === "ready"
+  ) {
+    return [
+      "ready",
+      "called",
+    ];
   }
 
   return [columnStatus];
 }
 
-/**
- * Devuelve una nueva orden con el estado
- * siguiente (no muta la original).
+/*
+ * ======================================================
+ * AVANZAR PEDIDO
+ * ======================================================
+ *
+ * Devuelve una nueva orden con el
+ * siguiente estado.
+ *
+ * No modifica la orden original.
+ *
+ * Esta función es útil para lógica
+ * local/pruebas. Los cambios reales
+ * del pedido se realizan mediante
+ * el backend.
  */
+
 export function advanceOrder(
   order: Order
 ): Order {
-  const nextStatus = getNextStatus(
-    order.status
-  );
+  const nextStatus =
+    getNextStatus(
+      order.status
+    );
 
   if (!nextStatus) {
     return order;
   }
 
-  const now = new Date().toISOString();
+  const now =
+    new Date().toISOString();
 
   return {
     ...order,
 
-    status: nextStatus,
+    status:
+      nextStatus,
 
     calledAt:
-      nextStatus === "called"
+      nextStatus ===
+      "called"
         ? now
         : order.calledAt,
 
     deliveredAt:
-      nextStatus === "delivered"
+      nextStatus ===
+      "delivered"
         ? now
         : order.deliveredAt,
   };

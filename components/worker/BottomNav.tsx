@@ -68,6 +68,7 @@ export default function BottomNav({
         return (
           <button
             key={module.id}
+            type="button"
             className={`${styles.item} ${
               active ? styles.active : ""
             }`}

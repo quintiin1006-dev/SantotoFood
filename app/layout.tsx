@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SantotoFood",
-  description:
-    "Sistema de gestión de pedidos de SantotoFood",
+  title: "UniFood",
+  description: "Tu comida, sin filas.",
 };
 
 export default function RootLayout({
